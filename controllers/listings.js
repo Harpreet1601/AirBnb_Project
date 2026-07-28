@@ -1,4 +1,5 @@
 const Listing = require("../models/Listing.js");
+const { cloudinary } = require("../cloudConfig.js");
 const axios = require("axios");
 
 module.exports.index = async (req,res) => {
@@ -70,7 +71,9 @@ module.exports.updateListing = async(req,res) => {
     if(typeof req.file !== "undefined") {
 
         // delete old image
-        await cloudinary.uploader.destroy(listing.image.filename);
+        if (listing.image?.filename) {
+            await cloudinary.uploader.destroy(listing.image.filename);
+        }
 
         // save new image
         let url = req.file.path;
